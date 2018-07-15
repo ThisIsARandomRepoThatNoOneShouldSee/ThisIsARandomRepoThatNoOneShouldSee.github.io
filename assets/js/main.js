@@ -91,41 +91,73 @@
 
 	});
 
+	var x = document.getElementById("demo");
+	if(x && navigator.geolocation)
+            navigator.geolocation.getCurrentPosition(position => $("a#demo").replaceWith(
+                '<a id=\"demo\" href=\"https://www.google.com/maps/dir/' + position.coords.latitude + ','
+                + position.coords.longitude
+                +'/1434+S+Water+Ave,+Gallatin,+TN+37066/@36.350183,-86.4741911,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x88643a'
+                + 'e7f687c36f:0x267eb0a90cfd6ff6!2m2!1d-86.4391717!2d36.350119\">Location</a>'))
+
+
 })(jQuery);
 
 // Get the modal
-var modal = document.getElementById('myModal');
-var modal2 = document.getElementById('myModal2');
+var modal = document.getElementsByClassName('modal');
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-var btn2 = document.getElementById("myBtn2");
+var btn = document.getElementById("btn");
+var btn2 = document.getElementById("btn2");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-    modal.style.display = "block";
-}
-btn2.onclick = function() {
-    modal2.style.display = "block";
-}
-
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
+if(btn) {
+//When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal[0].style.display = "block";
+    }
+    btn2.onclick = function () {
+        modal[1].style.display = "block";
+    }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    window.onclick = function (event) {
+        var i = 0, len = modal.length;
+        for (; i < len; ++i)
+            if (event.target === modal[i]) {
+                modal[i].style.display = "none";
+                break;
+            }
+    }
+}
+
+var Count = {counter: 0};
+
+function hover(element) {
+    if($('div#myModal').has(element).length) {
+        var modal_banner = $('#myModal .modal-banner')[0];
     }
 
-    if (event.target == modal2) {
-        modal2.style.display = "none";
+    else if($('div#myModal2').has(element).length) {
+        var modal_banner = $('#myModal2 .modal-banner')[0];
     }
+    var modal_banner_src = modal_banner.src;
+    var element_src = element.src;
+    modal_banner.setAttribute('src', element_src);
+    element.setAttribute('src', modal_banner_src);
+}
+
+function clicked(element) {
+    if($('div#myModal').has(element).length) {
+        var modal_pics = $('#myModal .modal-pic');
+    }
+
+    else if($('div#myModal2').has(element).length) {
+        var modal_pics = $('#myModal2 .modal-pic');
+    }
+
+    var modal_banner_src = element.src;
+    var pic_src = modal_pics[Count.counter].src;
+    element.setAttribute('src', pic_src);
+    modal_pics[Count.counter].setAttribute('src', modal_banner_src);
+    Count.counter = (Count.counter + 1)%modal_pics.length;
+
 }
